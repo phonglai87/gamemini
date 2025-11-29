@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Portal 2125</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-pink: #bc13fe;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #050505;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(76, 29, 149, 0.2) 0%, transparent 50%),
+                linear-gradient(0deg, transparent 24%, rgba(0, 255, 255, .05) 25%, rgba(0, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(0, 255, 255, .05) 75%, rgba(0, 255, 255, .05) 76%, transparent 77%, transparent),
+                linear-gradient(90deg, transparent 24%, rgba(0, 255, 255, .05) 25%, rgba(0, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(0, 255, 255, .05) 75%, rgba(0, 255, 255, .05) 76%, transparent 77%, transparent);
+            background-size: 100% 100%, 50px 50px, 50px 50px;
+            font-family: 'Orbitron', sans-serif;
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        h1 {
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            text-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue);
+            margin-bottom: 50px;
+            font-size: 2.5rem;
+            position: relative;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 2px;
+            background: var(--neon-pink);
+            box-shadow: 0 0 10px var(--neon-pink);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            width: 80%;
+            max-width: 1000px;
+            perspective: 1000px;
+        }
+
+        .game-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            display: block;
+        }
+
+        /* Hiệu ứng quét sáng (Scanline) */
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .game-card:hover::before {
+            left: 100%;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.6), inset 0 0 10px rgba(0, 243, 255, 0.2);
+        }
+
+        .game-card:nth-child(even):hover {
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 20px rgba(188, 19, 254, 0.6), inset 0 0 10px rgba(188, 19, 254, 0.2);
+        }
+
+        .icon-box {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+
+        .game-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+            display: block;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .game-desc {
+            font-size: 0.8rem;
+            color: #aaa;
+            font-family: sans-serif;
+            display: block;
+        }
+
+        /* Loading overlay khi click */
+        #warp-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 9999;
+            mix-blend-mode: overlay;
+        }
+
+        @media (max-width: 600px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="warp-overlay"></div>
+
+    <h1>Nexus Portal 22</h1>
+
+    <div class="grid-container">
+        <a href="s" class="game-card" onclick="warpTo(event, this.href)">
+            <span class="icon-box">🚀</span>
+            <span class="game-title">Space War</span>
+            <span class="game-desc">Chiến tranh giữa các vì sao</span>
+        </a>
+
+        <a href="cyber_arena.html" class="game-card" onclick="warpTo(event, this.href)">
+            <span class="icon-box">⚔️</span>
+            <span class="game-title">Cyber Arena</span>
+            <span class="game-desc">Đấu trường ảo giác</span>
+        </a>
+
+        <a href="race.html" class="game-card" onclick="warpTo(event, this.href)">
+            <span class="icon-box">🏎️</span>
+            <span class="game-title">Neon Racer</span>
+            <span class="game-desc">Đua xe tốc độ ánh sáng</span>
+        </a>
+        
+        <a href="puzzel" class="game-card" onclick="warpTo(event, this.href)">
+            <span class="icon-box">🧩</span>
+            <span class="game-title">Matrix Puzzle</span>
+            <span class="game-desc">Giải mã ma trận</span>
+        </a>
+    </div>
+
+    <audio id="warp-sound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+
+    <script>
+        function warpTo(e, url) {
+            e.preventDefault(); // Ngăn việc chuyển trang ngay lập tức
+            
+            const sound = document.getElementById('warp-sound');
+            const overlay = document.getElementById('warp-overlay');
+            
+            // 1. Chơi âm thanh
+            sound.volume = 0.5;
+            sound.currentTime = 0; // Reset về đầu nếu click liên tục
+            sound.play().catch(error => console.log("Cần tương tác người dùng để phát nhạc"));
+
+            // 2. Hiệu ứng chớp màn hình (Warp effect)
+            overlay.style.opacity = '1';
+            
+            // 3. Chờ âm thanh và hiệu ứng chạy xong một chút rồi mới chuyển trang
+            setTimeout(() => {
+                overlay.style.opacity = '0';
+                window.location.href = url;
+            }, 600); // Độ trễ 600ms (0.6 giây)
+        }
+    </script>
+</body>
+</html>
